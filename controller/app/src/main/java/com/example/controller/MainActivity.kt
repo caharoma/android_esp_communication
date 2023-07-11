@@ -2,6 +2,8 @@ package com.example.controller
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.widget.TextView
@@ -53,42 +55,42 @@ class MainActivity : AppCompatActivity() {
 
             var x = 0
 
-            while (socket.isConnected){
-
-                if(x == 5000000) {
+            fun Tosend() {
                     var m_int = touchplace.roundToInt()
                     var m = ""
-                    if (abs(m_int).toString().length == 1){
-                        m = "00"+abs(m_int).toString()
+                    if (abs(m_int).toString().length == 1) {
+                        m = "00" + abs(m_int).toString()
                     }
-                    if (abs(m_int).toString().length == 2){
-                        m = "0"+abs(m_int).toString()
+                    if (abs(m_int).toString().length == 2) {
+                        m = "0" + abs(m_int).toString()
                     }
-                    if (abs(m_int).toString().length == 3){
+                    if (abs(m_int).toString().length == 3) {
                         m = abs(m_int).toString()
                     }
 
-                    if (m_int > 0){
+                    if (m_int > 0) {
                         runOnUiThread {
                             testText.text = "+" + m
                         }
-                        soutput.println("+"+m)
+                        soutput.println("+" + m)
 
-                    }
-                    else {
+                    } else {
                         runOnUiThread {
                             testText.text = "-" + m
                         }
-                        soutput.println("-"+m)
+                        soutput.println("-" + m)
 
                     }
+                }
 
+            val senderHandler = Handler(Looper.getMainLooper())
+
+            senderHandler.post(object : Runnable{
+                override fun run(){
+                    thread{Tosend()}
+                    senderHandler.postDelayed(this, 50)
                 }
-                if (x > 5000000){
-                    x = 0
-                }
-                x++
-            }
+            })
         }
     }
 
