@@ -194,34 +194,24 @@ void loop() {
         if (buffer[0] != byte('-') && buffer[0]!= byte('+')){
           continue;
         }
-        String m = "";
 
-        if(buffer[0] == byte('-') || buffer[0] == byte('+')){
-          m = (char)buffer[3]+m;
-          if (buffer[2] != byte('0') || buffer[1] == byte('1')){
-            m = (char)buffer[2]+m;
-          }
-          if (buffer[1] == byte('1')){
-            m = (char)buffer[1]+m;
-          }
-        }
+        int m = (int)((buffer[1]-byte('0'))*100)+((buffer[2]-byte('0'))*10)+(buffer[3]-byte('0'));
         
 
         if(buffer[0] == byte('-')){
-          m = "-"+m;
+          m = -m;
         }
 
-        int data_int = m.toInt();
-        Serial.println(data_int);
+        Serial.println(m);
 
-        if(data_int != 0){
-          LAST_INFO = data_int;
+        if(m != 0){ 
+          LAST_INFO = m;
         }
         unsigned long curentMillis = millis();
 
 
 
-        if (curentMillis - lastMillis >= interval - abs(data_int)){
+        if (curentMillis - lastMillis >= interval - abs(m)){ 
           if (LAST_INFO != 0){
             for (int i=0; i<4; i++){
               gpio_set_level((gpio_num_t)leds[i], 0);
